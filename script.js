@@ -62,25 +62,25 @@ const roletaConfig = {
     anguloSetor: 45, // 360 / 8 setores
     
     // Física aprimorada
-    aceleracaoInicial: 0.8,
-    aceleracaoMaxima: 2.5,
-    velocidadeMinima: 3,
-    velocidadeMaxima: 28,
-    velocidadeConstante: 20,
-    desaceleracaoBase: 0.96,
-    desaceleracaoFinal: 0.92,
+    aceleracaoInicial: 0.5,
+    aceleracaoMaxima: 1.5,
+    velocidadeMinima: 5,
+    velocidadeMaxima: 25,
+    velocidadeConstante: 18,
+    desaceleracaoBase: 0.97,
+    desaceleracaoFinal: 0.95,
     
     // Tempos em milissegundos
-    tempoAceleracao: 1500,
-    tempoMinimoGiro: 4000,
-    tempoMaximoGiro: 8000,
-    tempoDesaceleracao: 3000,
+    tempoAceleracao: 1800,
+    tempoMinimoGiro: 3500,
+    tempoMaximoGiro: 6000,
+    tempoDesaceleracao: 2500,
     
     // Efeitos visuais
     intensidadeBrilho: 0.4,
     intensidadeSaturacao: 0.3,
     frequenciaTick: 150,
-    amplitudeVibracao: 2
+    amplitudeVibracao: 0.5
 };
 
 // Sistema de áudio aprimorado
@@ -688,7 +688,7 @@ function aplicarDesaceleracaoAprimorada(anguloFinal, premioGanho) {
 
 // Funções de easing para animações suaves
 function easeOutQuart(t) {
-    return 1 - Math.pow(1 - t, 4);
+    return 1 - (--t * t * t * t);
 }
 
 function easeOutCubic(t) {
@@ -1120,4 +1120,3 @@ window.gameState = gameState;
 window.roletaConfig = roletaConfig;
 
 console.log('🎰 RoletaWin Aprimorada carregada com sucesso!');
-
