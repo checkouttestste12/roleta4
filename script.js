@@ -1,15 +1,16 @@
-// ===== ROLETA PROFISSIONAL - VERSÃO APRIMORADA =====
-// Sistema de física realista e animações fluidas
+// ===== ROLETA ULTRA-REALISTA - VERSÃO CINEMATOGRÁFICA =====
+// Sistema de física quântica e efeitos visuais de última geração
 
 // Estados da máquina de estados da roleta
 const ESTADOS_ROLETA = {
     IDLE: 'idle',
     SPINNING: 'spinning',
     STOPPING: 'stopping',
-    STOPPED: 'stopped'
+    STOPPED: 'stopped',
+    OSCILLATING: 'oscillating' // Novo estado para micro-oscilações
 };
 
-// Estado do jogo com gerenciamento robusto
+// Estado do jogo com gerenciamento ultra-robusto
 let gameState = {
     usuario: null,
     saldo: 0,
@@ -31,13 +32,26 @@ let gameState = {
     // Locks para prevenir ações simultâneas
     bloqueado: false,
     
-    // Configurações de física
+    // Física ultra-avançada
     fisica: {
-        velocidadeMaxima: 20,
-        aceleracaoInicial: 0.8,
-        desaceleracaoFinal: 0.92,
-        inercia: 0.98,
-        atrito: 0.995
+        momentum: 0,
+        inercia: 0.995,
+        atritoRolamento: 0.998,
+        atritoAr: 0.9995,
+        atritoMagnetico: 0.997,
+        variacao: 0.0001,
+        oscilacaoAmplitude: 0,
+        oscilacaoFrequencia: 0,
+        oscilacaoTempo: 0
+    },
+    
+    // Performance adaptativa
+    performance: {
+        fps: 60,
+        qualidade: 'alta',
+        adaptativo: true,
+        ultimoFrame: 0,
+        contadorFrames: 0
     }
 };
 
@@ -72,7 +86,7 @@ const elements = {
     particlesBg: document.getElementById('particles-bg')
 };
 
-// Configurações da roleta com física realista
+// Configurações da roleta com física ultra-realista
 const roletaConfig = {
     setores: [
         { premio: 0, texto: 'Vazio', cor: 'linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%)', angulo: 0 },
@@ -86,67 +100,133 @@ const roletaConfig = {
     ],
     anguloSetor: 45,
     
-    // Física aprimorada com curvas realistas
+    // Física ultra-avançada com simulação real
     fisica: {
-        // Fase de aceleração
-        tempoAceleracao: 2000,
-        aceleracaoMaxima: 1.2,
-        curvaAceleracao: 'easeOutCubic',
+        // Fase de aceleração com variações naturais
+        tempoAceleracao: 1800,
+        aceleracaoInicial: 0.3,
+        aceleracaoMaxima: 1.8,
+        variacao: 0.15,
         
-        // Fase de velocidade constante
-        tempoVelocidadeConstante: 2500,
-        velocidadeConstante: 18,
+        // Fase de velocidade constante com imperfeições
+        tempoVelocidadeConstante: 2200,
+        velocidadeConstante: 22,
+        imperfeicoes: {
+            amplitude: 0.8,
+            frequencia: 0.02,
+            ruido: 0.1
+        },
         
-        // Fase de desaceleração
-        tempoDesaceleracao: 3000,
-        desaceleracaoInicial: 0.98,
-        desaceleracaoFinal: 0.94,
-        curvaDesaceleracao: 'easeInOutCubic',
+        // Fase de desaceleração ultra-realista
+        tempoDesaceleracao: 4500,
+        atrito: {
+            rolamento: 0.998,
+            ar: 0.9995,
+            magnetico: 0.997,
+            variacao: 0.0001
+        },
+        
+        // Micro-oscilações na parada
+        oscilacoes: {
+            amplitude: 1.2,
+            frequencia: 12,
+            amortecimento: 0.92,
+            duracao: 1800
+        },
         
         // Configurações de precisão
-        voltasMinimas: 4,
-        voltasMaximas: 7,
-        precisaoFinal: 0.1
+        voltasMinimas: 5,
+        voltasMaximas: 8,
+        precisaoFinal: 0.05
     },
     
-    // Efeitos visuais
+    // Efeitos visuais cinematográficos
     efeitos: {
-        blur: {
+        motionBlur: {
             minimo: 0,
-            maximo: 2,
-            threshold: 10
+            maximo: 4,
+            samples: 12,
+            threshold: 8
         },
         brilho: {
             minimo: 1,
-            maximo: 1.3,
-            threshold: 15
+            maximo: 1.4,
+            pulsacao: 0.1
+        },
+        reflexos: {
+            intensidade: 0.6,
+            cor: 'rgba(255, 255, 255, 0.3)',
+            angulo: 45
+        },
+        sombras: {
+            blur: 15,
+            offset: { x: 2, y: 4 },
+            cor: 'rgba(0, 0, 0, 0.4)'
         },
         particulas: {
-            quantidade: 30,
-            velocidade: 2,
-            tamanho: { min: 2, max: 6 }
+            quantidade: 50,
+            fisica: true,
+            gravidade: 0.2,
+            vento: { x: 0.05, y: 0 },
+            colisao: true
+        },
+        profundidade: {
+            parallax: 0.1,
+            escala: 0.02,
+            perspectiva: 1000
+        }
+    },
+    
+    // Áudio espacial 3D
+    audio: {
+        espacial: true,
+        reverberacao: {
+            roomSize: 0.7,
+            decay: 2.3,
+            wetGain: 0.3
+        },
+        posicoes: {
+            listener: { x: 0, y: 0, z: 1 },
+            roleta: { x: 0, y: 0, z: 0 }
+        },
+        doppler: {
+            factor: 0.1,
+            speedOfSound: 343
         }
     }
 };
 
-// ===== SISTEMA DE FÍSICA AVANÇADO =====
+// ===== SISTEMA DE FÍSICA QUÂNTICA =====
 
-class FisicaRoleta {
+class FisicaQuantica {
     constructor() {
         this.reset();
+        this.ruido = new SimplexNoise();
     }
     
     reset() {
         this.posicao = 0;
         this.velocidade = 0;
         this.aceleracao = 0;
+        this.momentum = 0;
         this.tempo = 0;
         this.fase = 'idle';
         this.posicaoAlvo = null;
         this.parametrosCurva = null;
+        this.oscilacao = {
+            amplitude: 0,
+            frequencia: 0,
+            tempo: 0,
+            offset: 0
+        };
+        this.imperfeicoes = {
+            rolamento: 0,
+            magnetismo: 0,
+            ar: 0
+        };
     }
     
-    // Curvas de easing profissionais
+    // Curvas de easing ultra-suaves
     static easing = {
         easeOutCubic: t => 1 - Math.pow(1 - t, 3),
         easeInOutCubic: t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
@@ -155,14 +235,31 @@ class FisicaRoleta {
         easeOutCirc: t => Math.sqrt(1 - Math.pow(t - 1, 2)),
         easeInOutCirc: t => t < 0.5 
             ? (1 - Math.sqrt(1 - Math.pow(2 * t, 2))) / 2
-            : (Math.sqrt(1 - Math.pow(-2 * t + 2, 2)) + 1) / 2
+            : (Math.sqrt(1 - Math.pow(-2 * t + 2, 2)) + 1) / 2,
+        easeOutElastic: t => {
+            const c4 = (2 * Math.PI) / 3;
+            return t === 0 ? 0 : t === 1 ? 1 : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
+        },
+        easeInOutBack: t => {
+            const c1 = 1.70158;
+            const c2 = c1 * 1.525;
+            return t < 0.5
+                ? (Math.pow(2 * t, 2) * ((c2 + 1) * 2 * t - c2)) / 2
+                : (Math.pow(2 * t - 2, 2) * ((c2 + 1) * (t * 2 - 2) + c2) + 2) / 2;
+        }
     };
     
     iniciarAceleracao() {
         this.fase = 'acelerando';
         this.tempo = 0;
-        this.velocidade = 2; // Velocidade inicial suave
-        this.aceleracao = roletaConfig.fisica.aceleracaoMaxima;
+        this.velocidade = 1; // Início muito suave
+        this.aceleracao = roletaConfig.fisica.aceleracaoInicial;
+        this.momentum = 0;
+        
+        // Inicializar imperfeições aleatórias
+        this.imperfeicoes.rolamento = (Math.random() - 0.5) * 0.0002;
+        this.imperfeicoes.magnetismo = (Math.random() - 0.5) * 0.0001;
+        this.imperfeicoes.ar = (Math.random() - 0.5) * 0.00005;
     }
     
     iniciarVelocidadeConstante() {
@@ -170,6 +267,7 @@ class FisicaRoleta {
         this.tempo = 0;
         this.velocidade = roletaConfig.fisica.velocidadeConstante;
         this.aceleracao = 0;
+        this.momentum = this.velocidade;
     }
     
     iniciarDesaceleracao(posicaoAlvo) {
@@ -177,7 +275,7 @@ class FisicaRoleta {
         this.tempo = 0;
         this.posicaoAlvo = posicaoAlvo;
         
-        // Calcular parâmetros da curva de desaceleração
+        // Calcular parâmetros da curva de desaceleração ultra-realista
         const distanciaRestante = posicaoAlvo - this.posicao;
         const tempoDesaceleracao = roletaConfig.fisica.tempoDesaceleracao;
         
@@ -185,8 +283,18 @@ class FisicaRoleta {
             posicaoInicial: this.posicao,
             velocidadeInicial: this.velocidade,
             distanciaTotal: distanciaRestante,
-            tempoTotal: tempoDesaceleracao
+            tempoTotal: tempoDesaceleracao,
+            momentumInicial: this.momentum
         };
+    }
+    
+    iniciarOscilacao() {
+        this.fase = 'oscilando';
+        this.tempo = 0;
+        this.oscilacao.amplitude = roletaConfig.fisica.oscilacoes.amplitude;
+        this.oscilacao.frequencia = roletaConfig.fisica.oscilacoes.frequencia;
+        this.oscilacao.offset = this.posicao;
+        this.velocidade = 0;
     }
     
     atualizar(deltaTime) {
@@ -202,24 +310,41 @@ class FisicaRoleta {
             case 'desacelerando':
                 this.atualizarDesaceleracao(deltaTime);
                 break;
+            case 'oscilando':
+                this.atualizarOscilacao(deltaTime);
+                break;
         }
         
-        // Atualizar posição com suavização
-        this.posicao += this.velocidade * (deltaTime / 16.67); // Normalizar para 60fps
+        // Aplicar imperfeições físicas
+        this.aplicarImperfeicoes(deltaTime);
+        
+        // Atualizar posição com momentum
+        this.posicao += this.velocidade * (deltaTime / 16.67);
         
         return {
             posicao: this.posicao,
             velocidade: this.velocidade,
+            momentum: this.momentum,
             fase: this.fase,
+            oscilacao: this.oscilacao,
             completo: this.fase === 'parado'
         };
     }
     
     atualizarAceleracao(deltaTime) {
         const progresso = Math.min(1, this.tempo / roletaConfig.fisica.tempoAceleracao);
-        const curva = FisicaRoleta.easing.easeOutCubic(progresso);
         
-        this.velocidade = 2 + (roletaConfig.fisica.velocidadeConstante - 2) * curva;
+        // Curva de aceleração com variações naturais
+        const curvaBase = FisicaQuantica.easing.easeOutCubic(progresso);
+        const variacao = Math.sin(this.tempo * 0.01) * roletaConfig.fisica.variacao;
+        const curva = curvaBase + variacao;
+        
+        // Calcular velocidade com momentum
+        const velocidadeAlvo = 1 + (roletaConfig.fisica.velocidadeConstante - 1) * curva;
+        this.velocidade = this.velocidade * 0.95 + velocidadeAlvo * 0.05; // Suavização
+        
+        // Atualizar momentum
+        this.momentum = this.velocidade * 0.8 + this.momentum * 0.2;
         
         if (progresso >= 1) {
             this.iniciarVelocidadeConstante();
@@ -227,57 +352,100 @@ class FisicaRoleta {
     }
     
     atualizarVelocidadeConstante(deltaTime) {
-        // Pequenas variações para simular imperfeições realistas
-        const variacao = (Math.sin(this.tempo * 0.01) * 0.2);
-        this.velocidade = roletaConfig.fisica.velocidadeConstante + variacao;
+        // Imperfeições mecânicas realistas
+        const ruido = this.ruido.noise2D(this.tempo * 0.001, 0) * roletaConfig.fisica.imperfeicoes.ruido;
+        const oscilacao = Math.sin(this.tempo * roletaConfig.fisica.imperfeicoes.frequencia) * 
+                         roletaConfig.fisica.imperfeicoes.amplitude;
         
+        // Aplicar variações naturais
+        this.velocidade = roletaConfig.fisica.velocidadeConstante + oscilacao + ruido;
+        this.momentum = this.velocidade;
+        
+        // Verificar se deve continuar ou aguardar comando de parada
         if (this.tempo >= roletaConfig.fisica.tempoVelocidadeConstante) {
-            // Aguardar comando de parada ou continuar girando
             if (gameState.estadoRoleta === ESTADOS_ROLETA.STOPPING) {
-                // Comando de parada já foi dado
-                return;
+                return; // Comando de parada já foi dado
             }
         }
     }
     
     atualizarDesaceleracao(deltaTime) {
         const progresso = Math.min(1, this.tempo / this.parametrosCurva.tempoTotal);
-        const curva = FisicaRoleta.easing.easeInOutCubic(progresso);
         
-        // Interpolação suave para a posição final
+        // Curva de desaceleração ultra-realista com múltiplas camadas
+        const curvaBase = FisicaQuantica.easing.easeInOutCirc(progresso);
+        const curvaFinal = FisicaQuantica.easing.easeOutElastic(Math.max(0, progresso - 0.8) * 5);
+        const curva = progresso < 0.8 ? curvaBase : curvaBase * 0.8 + curvaFinal * 0.2;
+        
+        // Interpolação ultra-suave para a posição final
         const posicaoAtual = this.parametrosCurva.posicaoInicial + 
             (this.parametrosCurva.distanciaTotal * curva);
         
-        // Calcular velocidade baseada na derivada da curva
-        const velocidadeNormalizada = 1 - curva;
-        this.velocidade = this.parametrosCurva.velocidadeInicial * velocidadeNormalizada * 0.7;
+        // Calcular velocidade com momentum realista
+        const velocidadeNormalizada = Math.max(0, 1 - curva);
+        this.velocidade = this.parametrosCurva.velocidadeInicial * velocidadeNormalizada * 0.6;
         
-        // Atualizar posição diretamente para garantir precisão
+        // Aplicar atrito progressivo
+        const atritoTotal = roletaConfig.fisica.atrito.rolamento * 
+                           roletaConfig.fisica.atrito.ar * 
+                           roletaConfig.fisica.atrito.magnetico;
+        this.velocidade *= atritoTotal;
+        
+        // Atualizar posição diretamente para garantir precisão absoluta
         this.posicao = posicaoAtual;
         
         if (progresso >= 1) {
-            this.fase = 'parado';
-            this.velocidade = 0;
             this.posicao = this.posicaoAlvo;
+            this.iniciarOscilacao();
         }
     }
     
+    atualizarOscilacao(deltaTime) {
+        const progresso = Math.min(1, this.tempo / roletaConfig.fisica.oscilacoes.duracao);
+        const amortecimento = Math.pow(roletaConfig.fisica.oscilacoes.amortecimento, progresso * 10);
+        
+        // Oscilação amortecida realista
+        const oscilacao = Math.sin(this.tempo * roletaConfig.fisica.oscilacoes.frequencia * 0.01) * 
+                         this.oscilacao.amplitude * amortecimento;
+        
+        this.posicao = this.oscilacao.offset + oscilacao;
+        this.velocidade = oscilacao * 0.1; // Velocidade residual da oscilação
+        
+        if (progresso >= 1 || Math.abs(oscilacao) < 0.01) {
+            this.fase = 'parado';
+            this.velocidade = 0;
+            this.posicao = this.oscilacao.offset;
+        }
+    }
+    
+    aplicarImperfeicoes(deltaTime) {
+        // Aplicar imperfeições físicas sutis
+        this.velocidade += this.imperfeicoes.rolamento * (deltaTime / 16.67);
+        this.velocidade += this.imperfeicoes.magnetismo * Math.sin(this.tempo * 0.1);
+        this.velocidade += this.imperfeicoes.ar * (this.velocidade * this.velocidade * 0.00001);
+        
+        // Garantir que a velocidade não seja negativa
+        this.velocidade = Math.max(0, this.velocidade);
+    }
+    
     parar() {
-        if (this.fase === 'desacelerando' || this.fase === 'parado') {
+        if (this.fase === 'desacelerando' || this.fase === 'oscilando' || this.fase === 'parado') {
             return false; // Já está parando ou parado
         }
         return true; // Pode parar
     }
 }
 
-// ===== SISTEMA DE ÁUDIO PROFISSIONAL =====
+// ===== SISTEMA DE ÁUDIO ESPACIAL 3D =====
 
-class AudioSystem {
+class AudioEspacial3D {
     constructor() {
         this.context = null;
         this.masterGain = null;
+        this.convolver = null;
+        this.listener = null;
         this.sounds = {};
-        this.volume = 0.3;
+        this.volume = 0.4;
         this.muted = false;
         this.init();
     }
@@ -286,33 +454,85 @@ class AudioSystem {
         try {
             this.context = new (window.AudioContext || window.webkitAudioContext)();
             this.masterGain = this.context.createGain();
+            this.listener = this.context.listener;
+            
+            // Configurar listener 3D
+            if (this.listener.positionX) {
+                this.listener.positionX.value = roletaConfig.audio.posicoes.listener.x;
+                this.listener.positionY.value = roletaConfig.audio.posicoes.listener.y;
+                this.listener.positionZ.value = roletaConfig.audio.posicoes.listener.z;
+            }
+            
+            // Criar reverberação
+            await this.criarReverberacao();
+            
             this.masterGain.connect(this.context.destination);
             this.masterGain.gain.value = this.volume;
             
             await this.carregarSounds();
-            console.log('🔊 Sistema de áudio inicializado');
+            console.log('🔊 Sistema de áudio espacial 3D inicializado');
         } catch (e) {
-            console.log('❌ Áudio não suportado:', e);
+            console.log('❌ Áudio espacial não suportado:', e);
         }
     }
     
+    async criarReverberacao() {
+        this.convolver = this.context.createConvolver();
+        
+        // Criar impulse response sintético para reverberação
+        const length = this.context.sampleRate * roletaConfig.audio.reverberacao.decay;
+        const impulse = this.context.createBuffer(2, length, this.context.sampleRate);
+        
+        for (let channel = 0; channel < 2; channel++) {
+            const channelData = impulse.getChannelData(channel);
+            for (let i = 0; i < length; i++) {
+                const n = length - i;
+                channelData[i] = (Math.random() * 2 - 1) * Math.pow(n / length, 2);
+            }
+        }
+        
+        this.convolver.buffer = impulse;
+    }
+    
     async carregarSounds() {
-        // Criar sons sintéticos mais profissionais
+        // Criar sons espaciais ultra-realistas
         this.sounds = {
-            giroInicio: this.criarSomComplexo([220, 330, 440], 0.3, 'sawtooth'),
-            tick: this.criarSomComplexo([800, 1200], 0.05, 'square'),
-            parada: this.criarSomComplexo([150, 100, 75], 0.8, 'sine'),
-            vitoria: this.criarMelodia([440, 554, 659, 880], 0.15),
-            derrota: this.criarSomComplexo([110, 82], 0.5, 'triangle')
+            giroInicio: this.criarSomEspacial([180, 220, 280, 350], 0.4, 'sawtooth'),
+            tick: this.criarSomEspacial([900, 1100, 1300], 0.03, 'square'),
+            tickVariacao: this.criarSomEspacial([850, 950, 1050], 0.025, 'square'),
+            parada: this.criarSomEspacial([120, 90, 60, 40], 1.2, 'sine'),
+            oscilacao: this.criarSomEspacial([200, 150], 0.1, 'triangle'),
+            vitoria: this.criarMelodiaEspacial([440, 554, 659, 880, 1108], 0.2),
+            derrota: this.criarSomEspacial([110, 82, 65], 0.8, 'triangle'),
+            atrito: this.criarRuidoAtrito(),
+            vento: this.criarRuidoVento()
         };
     }
     
-    criarSomComplexo(frequencias, duracao, tipo = 'sine') {
+    criarSomEspacial(frequencias, duracao, tipo = 'sine') {
         return {
-            play: () => {
+            play: (velocidade = 1, posicao = { x: 0, y: 0, z: 0 }) => {
                 if (!this.context || this.muted) return;
                 
                 const agora = this.context.currentTime;
+                const panner = this.context.createPanner();
+                
+                // Configurar áudio espacial
+                panner.panningModel = 'HRTF';
+                panner.distanceModel = 'inverse';
+                panner.refDistance = 1;
+                panner.maxDistance = 10000;
+                panner.rolloffFactor = 1;
+                panner.coneInnerAngle = 360;
+                panner.coneOuterAngle = 0;
+                panner.coneOuterGain = 0;
+                
+                // Posicionar som
+                if (panner.positionX) {
+                    panner.positionX.value = posicao.x;
+                    panner.positionY.value = posicao.y;
+                    panner.positionZ.value = posicao.z;
+                }
                 
                 frequencias.forEach((freq, index) => {
                     const oscillator = this.context.createOscillator();
@@ -321,48 +541,68 @@ class AudioSystem {
                     
                     oscillator.connect(filter);
                     filter.connect(gainNode);
-                    gainNode.connect(this.masterGain);
+                    gainNode.connect(panner);
+                    panner.connect(this.masterGain);
                     
-                    oscillator.frequency.value = freq;
+                    // Aplicar efeito Doppler
+                    const dopplerShift = 1 + (velocidade * roletaConfig.audio.doppler.factor);
+                    oscillator.frequency.value = freq * dopplerShift;
                     oscillator.type = tipo;
                     
                     filter.type = 'lowpass';
-                    filter.frequency.value = freq * 2;
+                    filter.frequency.value = freq * 2.5;
+                    filter.Q.value = 0.7;
                     
-                    const volume = 0.1 / frequencias.length;
+                    const volume = 0.15 / frequencias.length;
                     gainNode.gain.setValueAtTime(0, agora);
-                    gainNode.gain.linearRampToValueAtTime(volume, agora + 0.01);
+                    gainNode.gain.linearRampToValueAtTime(volume, agora + 0.02);
                     gainNode.gain.exponentialRampToValueAtTime(0.001, agora + duracao);
                     
-                    oscillator.start(agora + index * 0.01);
+                    oscillator.start(agora + index * 0.005);
                     oscillator.stop(agora + duracao);
                 });
             }
         };
     }
     
-    criarMelodia(notas, duracaoNota) {
+    criarMelodiaEspacial(notas, duracaoNota) {
         return {
             play: () => {
                 if (!this.context || this.muted) return;
                 
                 const agora = this.context.currentTime;
+                const panner = this.context.createPanner();
+                
+                // Configurar espacialização
+                panner.panningModel = 'HRTF';
+                if (panner.positionX) {
+                    panner.positionX.value = 0;
+                    panner.positionY.value = 0;
+                    panner.positionZ.value = 0;
+                }
                 
                 notas.forEach((freq, index) => {
                     const oscillator = this.context.createOscillator();
                     const gainNode = this.context.createGain();
+                    const filter = this.context.createBiquadFilter();
                     
-                    oscillator.connect(gainNode);
-                    gainNode.connect(this.masterGain);
+                    oscillator.connect(filter);
+                    filter.connect(gainNode);
+                    gainNode.connect(panner);
+                    panner.connect(this.convolver);
+                    this.convolver.connect(this.masterGain);
                     
                     oscillator.frequency.value = freq;
                     oscillator.type = 'sine';
                     
+                    filter.type = 'lowpass';
+                    filter.frequency.value = freq * 3;
+                    
                     const inicio = agora + index * duracaoNota;
-                    const fim = inicio + duracaoNota;
+                    const fim = inicio + duracaoNota * 1.5;
                     
                     gainNode.gain.setValueAtTime(0, inicio);
-                    gainNode.gain.linearRampToValueAtTime(0.05, inicio + 0.01);
+                    gainNode.gain.linearRampToValueAtTime(0.08, inicio + 0.02);
                     gainNode.gain.exponentialRampToValueAtTime(0.001, fim);
                     
                     oscillator.start(inicio);
@@ -372,10 +612,82 @@ class AudioSystem {
         };
     }
     
-    play(soundName) {
+    criarRuidoAtrito() {
+        return {
+            play: (intensidade = 1) => {
+                if (!this.context || this.muted) return;
+                
+                const bufferSize = this.context.sampleRate * 0.1;
+                const buffer = this.context.createBuffer(1, bufferSize, this.context.sampleRate);
+                const data = buffer.getChannelData(0);
+                
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = (Math.random() * 2 - 1) * intensidade * 0.1;
+                }
+                
+                const source = this.context.createBufferSource();
+                const gainNode = this.context.createGain();
+                const filter = this.context.createBiquadFilter();
+                
+                source.buffer = buffer;
+                source.connect(filter);
+                filter.connect(gainNode);
+                gainNode.connect(this.masterGain);
+                
+                filter.type = 'bandpass';
+                filter.frequency.value = 200 + intensidade * 100;
+                filter.Q.value = 2;
+                
+                gainNode.gain.value = intensidade * 0.05;
+                
+                source.start();
+            }
+        };
+    }
+    
+    criarRuidoVento() {
+        return {
+            play: (velocidade = 1) => {
+                if (!this.context || this.muted || velocidade < 10) return;
+                
+                const bufferSize = this.context.sampleRate * 0.2;
+                const buffer = this.context.createBuffer(1, bufferSize, this.context.sampleRate);
+                const data = buffer.getChannelData(0);
+                
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = (Math.random() * 2 - 1) * (velocidade / 30) * 0.02;
+                }
+                
+                const source = this.context.createBufferSource();
+                const gainNode = this.context.createGain();
+                const filter = this.context.createBiquadFilter();
+                
+                source.buffer = buffer;
+                source.connect(filter);
+                filter.connect(gainNode);
+                gainNode.connect(this.masterGain);
+                
+                filter.type = 'highpass';
+                filter.frequency.value = 1000;
+                
+                gainNode.gain.value = Math.min(0.03, velocidade / 1000);
+                
+                source.start();
+            }
+        };
+    }
+    
+    play(soundName, velocidade = 1, posicao = null) {
         if (this.sounds[soundName]) {
-            this.sounds[soundName].play();
+            const pos = posicao || roletaConfig.audio.posicoes.roleta;
+            this.sounds[soundName].play(velocidade, pos);
         }
+    }
+    
+    playTick(velocidade) {
+        // Alternar entre diferentes tipos de tick para variação
+        const tickType = Math.random() > 0.7 ? 'tickVariacao' : 'tick';
+        this.play(tickType, velocidade);
     }
     
     setVolume(volume) {
@@ -394,112 +706,313 @@ class AudioSystem {
     }
 }
 
-// ===== SISTEMA DE EFEITOS VISUAIS =====
+// ===== SISTEMA DE EFEITOS VISUAIS CINEMATOGRÁFICOS =====
 
-class EfeitosVisuais {
+class EfeitosCinematograficos {
     constructor() {
         this.particulas = [];
         this.ultimoTempo = 0;
+        this.canvas = null;
+        this.ctx = null;
+        this.inicializarCanvas();
     }
     
-    aplicarEfeitosVelocidade(velocidade) {
+    inicializarCanvas() {
+        // Criar canvas para efeitos avançados
+        this.canvas = document.createElement('canvas');
+        this.canvas.id = 'efeitos-canvas';
+        this.canvas.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        `;
+        
+        if (elements.roletaContainer) {
+            elements.roletaContainer.appendChild(this.canvas);
+            this.ctx = this.canvas.getContext('2d');
+            this.redimensionarCanvas();
+        }
+        
+        // Redimensionar canvas quando necessário
+        window.addEventListener('resize', () => this.redimensionarCanvas());
+    }
+    
+    redimensionarCanvas() {
+        if (!this.canvas || !elements.roletaContainer) return;
+        
+        const rect = elements.roletaContainer.getBoundingClientRect();
+        this.canvas.width = rect.width;
+        this.canvas.height = rect.height;
+    }
+    
+    aplicarEfeitosVelocidade(velocidade, fase) {
         if (!elements.roleta) return;
         
         const velocidadeNormalizada = Math.min(1, velocidade / roletaConfig.fisica.velocidadeConstante);
         
-        // Blur motion realista
-        const blur = roletaConfig.efeitos.blur.minimo + 
-            (roletaConfig.efeitos.blur.maximo - roletaConfig.efeitos.blur.minimo) * velocidadeNormalizada;
+        // Motion blur direcional ultra-realista
+        const blur = roletaConfig.efeitos.motionBlur.minimo + 
+            (roletaConfig.efeitos.motionBlur.maximo - roletaConfig.efeitos.motionBlur.minimo) * velocidadeNormalizada;
         
-        // Brilho dinâmico
-        const brilho = roletaConfig.efeitos.brilho.minimo + 
+        // Brilho dinâmico com pulsação
+        const brilhoBase = roletaConfig.efeitos.brilho.minimo + 
             (roletaConfig.efeitos.brilho.maximo - roletaConfig.efeitos.brilho.minimo) * velocidadeNormalizada;
+        const pulsacao = Math.sin(Date.now() * 0.01) * roletaConfig.efeitos.brilho.pulsacao;
+        const brilho = brilhoBase + pulsacao;
         
-        // Aplicar efeitos com transição suave
-        elements.roleta.style.filter = `blur(${blur}px) brightness(${brilho})`;
+        // Aplicar efeitos com transição ultra-suave
+        elements.roleta.style.filter = `blur(${blur}px) brightness(${brilho}) saturate(${1 + velocidadeNormalizada * 0.2})`;
         
-        // Efeito de escala sutil
-        const escala = 1 + (velocidadeNormalizada * 0.02);
-        elements.roleta.style.transform += ` scale(${escala})`;
+        // Efeito de profundidade com parallax
+        const escala = 1 + (velocidadeNormalizada * roletaConfig.efeitos.profundidade.escala);
+        const perspectiva = roletaConfig.efeitos.profundidade.perspectiva;
+        
+        elements.roleta.style.transform += ` scale(${escala}) perspective(${perspectiva}px)`;
+        
+        // Sombras dinâmicas
+        this.aplicarSombrasDinamicas(velocidadeNormalizada);
+        
+        // Reflexos em movimento
+        this.aplicarReflexosDinamicos(velocidade, fase);
     }
     
-    criarParticulasGiro() {
+    aplicarSombrasDinamicas(intensidade) {
+        if (!elements.roleta) return;
+        
+        const offset = roletaConfig.efeitos.sombras.offset;
+        const blur = roletaConfig.efeitos.sombras.blur * (1 + intensidade);
+        const cor = roletaConfig.efeitos.sombras.cor;
+        
+        elements.roleta.style.boxShadow = `${offset.x}px ${offset.y}px ${blur}px ${cor}`;
+    }
+    
+    aplicarReflexosDinamicos(velocidade, fase) {
+        if (!this.ctx) return;
+        
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        // Criar reflexos baseados na velocidade
+        const intensidade = Math.min(1, velocidade / 15);
+        if (intensidade < 0.1) return;
+        
+        const centerX = this.canvas.width / 2;
+        const centerY = this.canvas.height / 2;
+        const raio = Math.min(centerX, centerY) * 0.8;
+        
+        // Gradiente radial para reflexo
+        const gradient = this.ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, raio);
+        gradient.addColorStop(0, `rgba(255, 255, 255, ${intensidade * 0.3})`);
+        gradient.addColorStop(0.7, `rgba(255, 255, 255, ${intensidade * 0.1})`);
+        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        
+        this.ctx.fillStyle = gradient;
+        this.ctx.beginPath();
+        this.ctx.arc(centerX, centerY, raio, 0, Math.PI * 2);
+        this.ctx.fill();
+        
+        // Reflexo em movimento
+        const angulo = (Date.now() * velocidade * 0.01) % (Math.PI * 2);
+        const reflexoX = centerX + Math.cos(angulo) * raio * 0.6;
+        const reflexoY = centerY + Math.sin(angulo) * raio * 0.6;
+        
+        const reflexoGradient = this.ctx.createRadialGradient(reflexoX, reflexoY, 0, reflexoX, reflexoY, 30);
+        reflexoGradient.addColorStop(0, `rgba(255, 255, 255, ${intensidade * 0.6})`);
+        reflexoGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        
+        this.ctx.fillStyle = reflexoGradient;
+        this.ctx.beginPath();
+        this.ctx.arc(reflexoX, reflexoY, 30, 0, Math.PI * 2);
+        this.ctx.fill();
+    }
+    
+    criarParticulasAvancadas() {
         if (!elements.particlesBg) return;
         
         const agora = Date.now();
-        if (agora - this.ultimoTempo < 100) return; // Throttle
+        if (agora - this.ultimoTempo < 50) return; // Throttle otimizado
         this.ultimoTempo = agora;
         
-        for (let i = 0; i < 3; i++) {
-            const particula = document.createElement('div');
-            const tamanho = Math.random() * 4 + 2;
-            const cores = [
-                'rgba(255, 215, 0, 0.6)',
-                'rgba(255, 107, 107, 0.5)',
-                'rgba(76, 205, 196, 0.5)',
-                'rgba(138, 43, 226, 0.4)'
-            ];
-            
-            particula.style.cssText = `
-                position: absolute;
-                width: ${tamanho}px;
-                height: ${tamanho}px;
-                background: ${cores[Math.floor(Math.random() * cores.length)]};
-                border-radius: 50%;
-                pointer-events: none;
-                left: ${Math.random() * 100}%;
-                top: ${Math.random() * 100}%;
-                animation: particleGiro 2s ease-out forwards;
-            `;
-            
-            elements.particlesBg.appendChild(particula);
-            
-            // Remover após animação
-            setTimeout(() => {
-                if (particula.parentNode) {
-                    particula.parentNode.removeChild(particula);
-                }
-            }, 2000);
+        const quantidade = gameState.performance.qualidade === 'alta' ? 5 : 2;
+        
+        for (let i = 0; i < quantidade; i++) {
+            const particula = this.criarParticulaFisica();
+            elements.particlesBg.appendChild(particula.elemento);
+            this.particulas.push(particula);
         }
+        
+        // Limpar partículas antigas
+        this.limparParticulasAntigas();
+    }
+    
+    criarParticulaFisica() {
+        const elemento = document.createElement('div');
+        const tamanho = Math.random() * 6 + 2;
+        const cores = [
+            'rgba(255, 215, 0, 0.8)',
+            'rgba(255, 107, 107, 0.7)',
+            'rgba(76, 205, 196, 0.7)',
+            'rgba(138, 43, 226, 0.6)',
+            'rgba(255, 255, 255, 0.9)'
+        ];
+        
+        const particula = {
+            elemento: elemento,
+            x: Math.random() * 100,
+            y: Math.random() * 100,
+            vx: (Math.random() - 0.5) * 2,
+            vy: (Math.random() - 0.5) * 2,
+            vida: 3000,
+            criadaEm: Date.now(),
+            tamanho: tamanho,
+            cor: cores[Math.floor(Math.random() * cores.length)]
+        };
+        
+        elemento.style.cssText = `
+            position: absolute;
+            width: ${tamanho}px;
+            height: ${tamanho}px;
+            background: ${particula.cor};
+            border-radius: 50%;
+            pointer-events: none;
+            left: ${particula.x}%;
+            top: ${particula.y}%;
+            box-shadow: 0 0 ${tamanho * 2}px ${particula.cor};
+            animation: particulaGlow 2s ease-in-out infinite alternate;
+        `;
+        
+        return particula;
+    }
+    
+    atualizarParticulasFisica() {
+        this.particulas.forEach(particula => {
+            const idade = Date.now() - particula.criadaEm;
+            const progresso = idade / particula.vida;
+            
+            if (progresso >= 1) return;
+            
+            // Aplicar física
+            particula.vy += roletaConfig.efeitos.particulas.gravidade;
+            particula.vx += roletaConfig.efeitos.particulas.vento.x;
+            particula.vy += roletaConfig.efeitos.particulas.vento.y;
+            
+            particula.x += particula.vx;
+            particula.y += particula.vy;
+            
+            // Colisão com bordas
+            if (roletaConfig.efeitos.particulas.colisao) {
+                if (particula.x <= 0 || particula.x >= 100) particula.vx *= -0.8;
+                if (particula.y <= 0 || particula.y >= 100) particula.vy *= -0.8;
+                
+                particula.x = Math.max(0, Math.min(100, particula.x));
+                particula.y = Math.max(0, Math.min(100, particula.y));
+            }
+            
+            // Atualizar posição visual
+            particula.elemento.style.left = `${particula.x}%`;
+            particula.elemento.style.top = `${particula.y}%`;
+            
+            // Fade out
+            const opacity = 1 - progresso;
+            particula.elemento.style.opacity = opacity;
+        });
+    }
+    
+    limparParticulasAntigas() {
+        const agora = Date.now();
+        this.particulas = this.particulas.filter(particula => {
+            const idade = agora - particula.criadaEm;
+            if (idade >= particula.vida) {
+                if (particula.elemento.parentNode) {
+                    particula.elemento.parentNode.removeChild(particula.elemento);
+                }
+                return false;
+            }
+            return true;
+        });
     }
     
     destacarSetorVencedor(setorIndex) {
         const setores = document.querySelectorAll('.setor');
         if (setores[setorIndex]) {
-            setores[setorIndex].style.animation = 'setorVencedor 1s ease-in-out 3';
+            // Efeito de destaque ultra-dramático
+            setores[setorIndex].style.animation = 'setorVencedorUltra 2s ease-in-out 4';
             setores[setorIndex].style.zIndex = '100';
+            setores[setorIndex].style.transform += ' scale(1.15)';
+            
+            // Criar aura dourada
+            const aura = document.createElement('div');
+            aura.style.cssText = `
+                position: absolute;
+                top: -10px;
+                left: -10px;
+                right: -10px;
+                bottom: -10px;
+                border: 3px solid rgba(255, 215, 0, 0.8);
+                border-radius: inherit;
+                box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+                animation: auraVencedora 1s ease-in-out infinite alternate;
+                pointer-events: none;
+            `;
+            
+            setores[setorIndex].appendChild(aura);
             
             setTimeout(() => {
                 setores[setorIndex].style.animation = '';
                 setores[setorIndex].style.zIndex = '';
-            }, 3000);
+                setores[setorIndex].style.transform = setores[setorIndex].style.transform.replace(' scale(1.15)', '');
+                if (aura.parentNode) {
+                    aura.parentNode.removeChild(aura);
+                }
+            }, 8000);
         }
     }
     
-    criarConfetes() {
+    criarConfetesAvancados() {
         const container = document.querySelector('.confetti-container');
         if (!container) return;
         
         container.innerHTML = '';
         
-        const cores = ['#ffd700', '#ff6b6b', '#4ecdc4', '#8a2be2', '#00ff88', '#ff9f43'];
+        const cores = ['#ffd700', '#ff6b6b', '#4ecdc4', '#8a2be2', '#00ff88', '#ff9f43', '#ff1493'];
+        const formas = ['circle', 'square', 'triangle', 'star'];
         
-        for (let i = 0; i < 50; i++) {
+        for (let i = 0; i < 80; i++) {
             const confete = document.createElement('div');
-            const tamanho = Math.random() * 8 + 4;
+            const tamanho = Math.random() * 12 + 4;
             const cor = cores[Math.floor(Math.random() * cores.length)];
-            const forma = Math.random() > 0.5 ? '50%' : '0%';
+            const forma = formas[Math.floor(Math.random() * formas.length)];
+            
+            let borderRadius = '0%';
+            let clipPath = 'none';
+            
+            switch (forma) {
+                case 'circle':
+                    borderRadius = '50%';
+                    break;
+                case 'triangle':
+                    clipPath = 'polygon(50% 0%, 0% 100%, 100% 100%)';
+                    break;
+                case 'star':
+                    clipPath = 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)';
+                    break;
+            }
             
             confete.style.cssText = `
                 position: absolute;
                 width: ${tamanho}px;
                 height: ${tamanho}px;
                 background: ${cor};
-                border-radius: ${forma};
+                border-radius: ${borderRadius};
+                clip-path: ${clipPath};
                 left: ${Math.random() * 100}%;
-                top: -10px;
-                animation: confeteFall ${2 + Math.random() * 3}s ease-out forwards;
-                animation-delay: ${Math.random() * 2}s;
+                top: -20px;
+                box-shadow: 0 0 ${tamanho}px ${cor};
+                animation: confeteFallAvancado ${3 + Math.random() * 4}s ease-out forwards;
+                animation-delay: ${Math.random() * 3}s;
             `;
             
             container.appendChild(confete);
@@ -507,27 +1020,196 @@ class EfeitosVisuais {
         
         setTimeout(() => {
             container.innerHTML = '';
-        }, 6000);
+        }, 8000);
     }
     
     limparEfeitos() {
         if (elements.roleta) {
             elements.roleta.style.filter = '';
             elements.roleta.style.transform = elements.roleta.style.transform.replace(/scale\([^)]*\)/g, '');
+            elements.roleta.style.boxShadow = '';
         }
+        
+        if (this.ctx) {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+        
+        // Limpar todas as partículas
+        this.particulas.forEach(particula => {
+            if (particula.elemento.parentNode) {
+                particula.elemento.parentNode.removeChild(particula.elemento);
+            }
+        });
+        this.particulas = [];
     }
 }
 
-// ===== INSTÂNCIAS DOS SISTEMAS =====
-const fisica = new FisicaRoleta();
-const audioSystem = new AudioSystem();
-const efeitos = new EfeitosVisuais();
+// ===== SISTEMA DE PERFORMANCE ADAPTATIVA =====
 
-// ===== FUNÇÕES PRINCIPAIS APRIMORADAS =====
+class PerformanceAdaptativa {
+    constructor() {
+        this.fps = 60;
+        this.ultimoFrame = 0;
+        this.contadorFrames = 0;
+        this.tempoInicio = Date.now();
+        this.qualidade = 'alta';
+        this.adaptativo = true;
+        this.historico = [];
+    }
+    
+    atualizar() {
+        const agora = Date.now();
+        this.contadorFrames++;
+        
+        // Calcular FPS a cada segundo
+        if (agora - this.tempoInicio >= 1000) {
+            this.fps = this.contadorFrames;
+            this.historico.push(this.fps);
+            
+            // Manter apenas os últimos 10 segundos
+            if (this.historico.length > 10) {
+                this.historico.shift();
+            }
+            
+            // Adaptar qualidade se necessário
+            if (this.adaptativo) {
+                this.adaptarQualidade();
+            }
+            
+            this.contadorFrames = 0;
+            this.tempoInicio = agora;
+        }
+        
+        this.ultimoFrame = agora;
+        return this.fps;
+    }
+    
+    adaptarQualidade() {
+        const fpsMedia = this.historico.reduce((a, b) => a + b, 0) / this.historico.length;
+        
+        if (fpsMedia < 30 && this.qualidade === 'alta') {
+            this.qualidade = 'media';
+            this.aplicarQualidadeMedia();
+            console.log('📉 Qualidade reduzida para média (FPS:', fpsMedia.toFixed(1), ')');
+        } else if (fpsMedia < 20 && this.qualidade === 'media') {
+            this.qualidade = 'baixa';
+            this.aplicarQualidadeBaixa();
+            console.log('📉 Qualidade reduzida para baixa (FPS:', fpsMedia.toFixed(1), ')');
+        } else if (fpsMedia > 50 && this.qualidade === 'media') {
+            this.qualidade = 'alta';
+            this.aplicarQualidadeAlta();
+            console.log('📈 Qualidade aumentada para alta (FPS:', fpsMedia.toFixed(1), ')');
+        } else if (fpsMedia > 40 && this.qualidade === 'baixa') {
+            this.qualidade = 'media';
+            this.aplicarQualidadeMedia();
+            console.log('📈 Qualidade aumentada para média (FPS:', fpsMedia.toFixed(1), ')');
+        }
+    }
+    
+    aplicarQualidadeAlta() {
+        roletaConfig.efeitos.particulas.quantidade = 50;
+        roletaConfig.efeitos.motionBlur.samples = 12;
+        gameState.performance.qualidade = 'alta';
+    }
+    
+    aplicarQualidadeMedia() {
+        roletaConfig.efeitos.particulas.quantidade = 25;
+        roletaConfig.efeitos.motionBlur.samples = 8;
+        gameState.performance.qualidade = 'media';
+    }
+    
+    aplicarQualidadeBaixa() {
+        roletaConfig.efeitos.particulas.quantidade = 10;
+        roletaConfig.efeitos.motionBlur.samples = 4;
+        gameState.performance.qualidade = 'baixa';
+    }
+    
+    getFPS() {
+        return this.fps;
+    }
+    
+    getQualidade() {
+        return this.qualidade;
+    }
+}
 
-// Inicialização aprimorada
+// ===== CLASSE SIMPLEX NOISE PARA IMPERFEIÇÕES NATURAIS =====
+
+class SimplexNoise {
+    constructor() {
+        this.grad3 = [[1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0],[1,0,1],[-1,0,1],[1,0,-1],[-1,0,-1],[0,1,1],[0,-1,1],[0,1,-1],[0,-1,-1]];
+        this.p = [];
+        for(let i=0; i<256; i++) {
+            this.p[i] = Math.floor(Math.random()*256);
+        }
+        for(let i=0; i<512; i++) {
+            this.perm[i] = this.p[i & 255];
+        }
+    }
+    
+    perm = [];
+    
+    dot(g, x, y) {
+        return g[0]*x + g[1]*y;
+    }
+    
+    noise2D(xin, yin) {
+        let n0, n1, n2;
+        const F2 = 0.5*(Math.sqrt(3.0)-1.0);
+        const s = (xin+yin)*F2;
+        const i = Math.floor(xin+s);
+        const j = Math.floor(yin+s);
+        const G2 = (3.0-Math.sqrt(3.0))/6.0;
+        const t = (i+j)*G2;
+        const X0 = i-t;
+        const Y0 = j-t;
+        const x0 = xin-X0;
+        const y0 = yin-Y0;
+        let i1, j1;
+        if(x0>y0) {i1=1; j1=0;}
+        else {i1=0; j1=1;}
+        const x1 = x0 - i1 + G2;
+        const y1 = y0 - j1 + G2;
+        const x2 = x0 - 1.0 + 2.0 * G2;
+        const y2 = y0 - 1.0 + 2.0 * G2;
+        const ii = i & 255;
+        const jj = j & 255;
+        const gi0 = this.perm[ii+this.perm[jj]] % 12;
+        const gi1 = this.perm[ii+i1+this.perm[jj+j1]] % 12;
+        const gi2 = this.perm[ii+1+this.perm[jj+1]] % 12;
+        let t0 = 0.5 - x0*x0-y0*y0;
+        if(t0<0) n0 = 0.0;
+        else {
+            t0 *= t0;
+            n0 = t0 * t0 * this.dot(this.grad3[gi0], x0, y0);
+        }
+        let t1 = 0.5 - x1*x1-y1*y1;
+        if(t1<0) n1 = 0.0;
+        else {
+            t1 *= t1;
+            n1 = t1 * t1 * this.dot(this.grad3[gi1], x1, y1);
+        }
+        let t2 = 0.5 - x2*x2-y2*y2;
+        if(t2<0) n2 = 0.0;
+        else {
+            t2 *= t2;
+            n2 = t2 * t2 * this.dot(this.grad3[gi2], x2, y2);
+        }
+        return 70.0 * (n0 + n1 + n2);
+    }
+}
+
+// ===== INSTÂNCIAS DOS SISTEMAS ULTRA-AVANÇADOS =====
+const fisica = new FisicaQuantica();
+const audioSystem = new AudioEspacial3D();
+const efeitos = new EfeitosCinematograficos();
+const performance = new PerformanceAdaptativa();
+
+// ===== FUNÇÕES PRINCIPAIS ULTRA-APRIMORADAS =====
+
+// Inicialização ultra-avançada
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🎰 RoletaWin Profissional - Iniciando...');
+    console.log('🎰 RoletaWin Ultra-Realista - Iniciando...');
     
     setTimeout(() => {
         carregarEstadoJogo();
@@ -536,6 +1218,7 @@ document.addEventListener('DOMContentLoaded', function() {
         criarParticulas();
         inicializarEfeitosVisuais();
         adicionarAnimacoesCSS();
+        inicializarSistemaHaptico();
         
         // Garantir estado inicial correto
         if (elements.btnGirar && elements.btnParar) {
@@ -543,9 +1226,24 @@ document.addEventListener('DOMContentLoaded', function() {
             elements.btnParar.classList.add('hidden');
         }
         
-        console.log('🚀 Sistema profissional inicializado!');
+        console.log('🚀 Sistema ultra-realista inicializado!');
     }, 100);
 });
+
+// Sistema háptico para dispositivos móveis
+function inicializarSistemaHaptico() {
+    // Detectar se o dispositivo suporta vibração
+    if ('vibrate' in navigator) {
+        console.log('📱 Sistema háptico disponível');
+        gameState.haptico = true;
+    }
+}
+
+function vibrar(padrao) {
+    if (gameState.haptico && 'vibrate' in navigator) {
+        navigator.vibrate(padrao);
+    }
+}
 
 // Carregar estado do jogo
 function carregarEstadoJogo() {
@@ -553,7 +1251,7 @@ function carregarEstadoJogo() {
     if (estadoSalvo) {
         const estadoParsed = JSON.parse(estadoSalvo);
         gameState = { ...gameState, ...estadoParsed };
-        gameState.estadoRoleta = ESTADOS_ROLETA.IDLE; // Sempre iniciar parado
+        gameState.estadoRoleta = ESTADOS_ROLETA.IDLE;
         console.log('📂 Estado carregado:', gameState);
     }
 }
@@ -571,6 +1269,8 @@ function salvarEstadoJogo() {
     delete estadoParaSalvar.duracaoGiroTotal;
     delete estadoParaSalvar.bloqueado;
     delete estadoParaSalvar.fisica;
+    delete estadoParaSalvar.performance;
+    delete estadoParaSalvar.haptico;
     
     localStorage.setItem('roletaUser', JSON.stringify(estadoParaSalvar));
 }
@@ -584,11 +1284,13 @@ function inicializarEventListeners() {
     
     elements.btnGirar.addEventListener('click', (e) => {
         criarEfeitoRipple(e, elements.btnGirar);
+        vibrar([10]); // Vibração sutil
         handleGirarClick();
     });
     
     elements.btnParar.addEventListener('click', (e) => {
         criarEfeitoRipple(e, elements.btnParar);
+        vibrar([20]); // Vibração mais forte
         handlePararClick();
     });
     
@@ -603,10 +1305,11 @@ function inicializarEventListeners() {
         elements.btnContinuar.addEventListener('click', fecharModalResultado);
     }
     
-    // Eventos de teclado
+    // Eventos de teclado com feedback háptico
     document.addEventListener('keydown', (e) => {
         if (e.code === 'Space' && !gameState.bloqueado) {
             e.preventDefault();
+            vibrar([5]);
             if (gameState.estadoRoleta === ESTADOS_ROLETA.IDLE) {
                 handleGirarClick();
             } else if (gameState.estadoRoleta === ESTADOS_ROLETA.SPINNING) {
@@ -625,7 +1328,7 @@ function handleGirarClick() {
     if (!gameState.usuario) {
         mostrarModalCadastro();
     } else if (gameState.girosGratis > 0) {
-        iniciarGiroProfissional();
+        iniciarGiroUltraRealista();
     } else {
         mostrarToast('Você não tem mais giros grátis disponíveis!', 'warning');
     }
@@ -637,43 +1340,46 @@ function handlePararClick() {
         return;
     }
     
-    pararGiroProfissional();
+    pararGiroUltraRealista();
 }
 
-// ===== FUNÇÃO PRINCIPAL: INICIAR GIRO PROFISSIONAL =====
-function iniciarGiroProfissional() {
+// ===== FUNÇÃO PRINCIPAL: INICIAR GIRO ULTRA-REALISTA =====
+function iniciarGiroUltraRealista() {
     if (gameState.girosGratis <= 0 || gameState.bloqueado) {
         return;
     }
     
-    console.log('🎯 Iniciando giro profissional');
+    console.log('🎯 Iniciando giro ultra-realista');
     
     // Bloquear ações e definir estado
     gameState.bloqueado = true;
     gameState.estadoRoleta = ESTADOS_ROLETA.SPINNING;
     gameState.tempoInicioGiro = Date.now();
     
-    // Resetar física
+    // Resetar física quântica
     fisica.reset();
     fisica.posicao = gameState.anguloAtual;
     fisica.iniciarAceleracao();
     
-    // Atualizar interface
-    trocarBotoes(true);
+    // Atualizar interface com antecipação
+    trocarBotoesComAntecipacao(true);
     adicionarClassesGiro();
     
-    // Efeitos
-    audioSystem.play('giroInicio');
+    // Efeitos e áudio espacial
+    audioSystem.play('giroInicio', 1);
+    vibrar([50, 50, 100]); // Padrão de vibração para início
     
-    // Iniciar loop de animação
-    iniciarLoopAnimacao();
+    // Iniciar loop de animação ultra-avançado
+    iniciarLoopAnimacaoUltraAvancado();
     
     mostrarToast('Clique em PARAR quando quiser parar a roleta!', 'info');
 }
 
-// ===== LOOP DE ANIMAÇÃO PROFISSIONAL =====
-function iniciarLoopAnimacao() {
+// ===== LOOP DE ANIMAÇÃO ULTRA-AVANÇADO =====
+function iniciarLoopAnimacaoUltraAvancado() {
     let ultimoTempo = Date.now();
+    let ultimoTick = 0;
+    let contadorTicks = 0;
     
     function loop() {
         if (gameState.estadoRoleta === ESTADOS_ROLETA.STOPPED) {
@@ -684,38 +1390,63 @@ function iniciarLoopAnimacao() {
         const deltaTime = agora - ultimoTempo;
         ultimoTempo = agora;
         
-        // Atualizar física
+        // Atualizar sistema de performance
+        const fps = performance.atualizar();
+        
+        // Atualizar física quântica
         const estadoFisica = fisica.atualizar(deltaTime);
         
         // Atualizar estado do jogo
         gameState.anguloAtual = estadoFisica.posicao;
         gameState.velocidadeAtual = estadoFisica.velocidade;
+        gameState.fisica.momentum = estadoFisica.momentum;
         
-        // Aplicar rotação
+        // Aplicar rotação ultra-suave
         if (elements.roleta) {
             elements.roleta.style.transform = `rotate(${gameState.anguloAtual}deg)`;
         }
         
-        // Efeitos visuais baseados na velocidade
-        efeitos.aplicarEfeitosVelocidade(gameState.velocidadeAtual);
+        // Efeitos visuais cinematográficos baseados na velocidade
+        efeitos.aplicarEfeitosVelocidade(gameState.velocidadeAtual, estadoFisica.fase);
         
         // Atualizar indicador de velocidade
         atualizarIndicadorVelocidade();
         
-        // Criar partículas durante o giro
-        if (gameState.velocidadeAtual > 5) {
-            efeitos.criarParticulasGiro();
+        // Criar partículas avançadas durante o giro
+        if (gameState.velocidadeAtual > 3) {
+            efeitos.criarParticulasAvancadas();
         }
         
-        // Sons de tick baseados na velocidade
-        const shouldTick = Math.random() < (gameState.velocidadeAtual / 100);
-        if (shouldTick && gameState.velocidadeAtual > 8) {
-            audioSystem.play('tick');
+        // Atualizar física das partículas
+        efeitos.atualizarParticulasFisica();
+        
+        // Sistema de áudio espacial avançado
+        const intervaloTick = Math.max(30, 200 - (gameState.velocidadeAtual * 8));
+        if (agora - ultimoTick > intervaloTick && gameState.velocidadeAtual > 5) {
+            audioSystem.playTick(gameState.velocidadeAtual);
+            
+            // Vibração sutil para ticks
+            if (contadorTicks % 4 === 0) {
+                vibrar([2]);
+            }
+            
+            ultimoTick = agora;
+            contadorTicks++;
+        }
+        
+        // Som de vento em alta velocidade
+        if (gameState.velocidadeAtual > 15 && Math.random() < 0.1) {
+            audioSystem.play('vento', gameState.velocidadeAtual);
+        }
+        
+        // Som de atrito durante desaceleração
+        if (estadoFisica.fase === 'desacelerando' && Math.random() < 0.2) {
+            audioSystem.play('atrito', gameState.velocidadeAtual / 20);
         }
         
         // Verificar se terminou
         if (estadoFisica.completo) {
-            finalizarGiroProfissional();
+            finalizarGiroUltraRealista();
             return;
         }
         
@@ -726,20 +1457,20 @@ function iniciarLoopAnimacao() {
     loop();
 }
 
-// ===== PARAR GIRO PROFISSIONAL =====
-function pararGiroProfissional() {
+// ===== PARAR GIRO ULTRA-REALISTA =====
+function pararGiroUltraRealista() {
     if (gameState.estadoRoleta !== ESTADOS_ROLETA.SPINNING) {
         return;
     }
     
-    console.log('🛑 Parando giro profissional');
+    console.log('🛑 Parando giro ultra-realista');
     
     gameState.estadoRoleta = ESTADOS_ROLETA.STOPPING;
     
     // Determinar prêmio e posição final
     const { anguloFinal, premioGanho } = calcularResultadoFinal();
     
-    // Iniciar desaceleração para a posição final
+    // Iniciar desaceleração ultra-realista para a posição final
     fisica.iniciarDesaceleracao(anguloFinal);
     
     // Armazenar resultado para finalização
@@ -747,8 +1478,11 @@ function pararGiroProfissional() {
     gameState.anguloFinal = anguloFinal;
     
     // Atualizar interface
-    trocarBotoes(false);
+    trocarBotoesComAntecipacao(false);
     removerClassesGiro();
+    
+    // Vibração para confirmação de parada
+    vibrar([30, 30, 60]);
 }
 
 // Calcular resultado final com lógica de negócio
@@ -771,7 +1505,7 @@ function calcularResultadoFinal() {
         }
     }
     
-    // Calcular ângulo final preciso
+    // Calcular ângulo final ultra-preciso
     const anguloSetor = setorEscolhido * roletaConfig.anguloSetor;
     const anguloAleatorioNoSetor = Math.random() * roletaConfig.anguloSetor;
     const voltasAdicionais = (roletaConfig.fisica.voltasMinimas + 
@@ -792,9 +1526,9 @@ function calcularResultadoFinal() {
     return { anguloFinal, premioGanho };
 }
 
-// ===== FINALIZAR GIRO PROFISSIONAL =====
-function finalizarGiroProfissional() {
-    console.log('🏁 Finalizando giro profissional');
+// ===== FINALIZAR GIRO ULTRA-REALISTA =====
+function finalizarGiroUltraRealista() {
+    console.log('🏁 Finalizando giro ultra-realista');
     
     // Atualizar estado
     gameState.estadoRoleta = ESTADOS_ROLETA.STOPPED;
@@ -809,7 +1543,7 @@ function finalizarGiroProfissional() {
     // Limpar efeitos visuais
     efeitos.limparEfeitos();
     
-    // Garantir posição final exata
+    // Garantir posição final ultra-exata
     gameState.anguloAtual = gameState.anguloFinal;
     if (elements.roleta) {
         elements.roleta.style.transform = `rotate(${gameState.anguloFinal}deg)`;
@@ -820,8 +1554,8 @@ function finalizarGiroProfissional() {
         elements.velocidadeIndicator.style.width = '0%';
     }
     
-    // Som de parada
-    audioSystem.play('parada');
+    // Som de parada espacial
+    audioSystem.play('parada', 0);
     
     // Atualizar estado do jogo
     const premioGanho = gameState.premioAtual;
@@ -837,32 +1571,40 @@ function finalizarGiroProfissional() {
     // Resetar estado da roleta
     gameState.estadoRoleta = ESTADOS_ROLETA.IDLE;
     
-    // Mostrar resultado com delay dramático
+    // Mostrar resultado com delay ultra-dramático
     setTimeout(() => {
         if (premioGanho > 0) {
-            efeitos.criarConfetes();
+            efeitos.criarConfetesAvancados();
             audioSystem.play('vitoria');
+            
+            // Vibração de vitória
+            vibrar([100, 50, 100, 50, 200]);
             
             // Destacar setor vencedor
             const setorIndex = Math.floor(((360 - (gameState.anguloFinal % 360) + 22.5) % 360) / 45);
             efeitos.destacarSetorVencedor(setorIndex);
         } else {
             audioSystem.play('derrota');
+            vibrar([200]); // Vibração de derrota
         }
         
         mostrarModalResultado(premioGanho);
-    }, 1000);
+    }, 1200);
 }
 
-// ===== FUNÇÕES DE INTERFACE =====
+// ===== FUNÇÕES DE INTERFACE ULTRA-APRIMORADAS =====
 
-// Trocar botões com animação suave
-function trocarBotoes(girando) {
+// Trocar botões com antecipação e follow-through
+function trocarBotoesComAntecipacao(girando) {
     if (!elements.btnGirar || !elements.btnParar) return;
     
     if (girando) {
-        elements.btnGirar.style.transform = 'scale(0.8)';
-        elements.btnGirar.style.opacity = '0';
+        // Antecipação
+        elements.btnGirar.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+            elements.btnGirar.style.transform = 'scale(0.8)';
+            elements.btnGirar.style.opacity = '0';
+        }, 100);
         
         setTimeout(() => {
             elements.btnGirar.classList.add('hidden');
@@ -870,14 +1612,22 @@ function trocarBotoes(girando) {
             elements.btnParar.style.transform = 'scale(0.8)';
             elements.btnParar.style.opacity = '0';
             
+            // Follow-through
             requestAnimationFrame(() => {
-                elements.btnParar.style.transform = 'scale(1)';
+                elements.btnParar.style.transform = 'scale(1.1)';
                 elements.btnParar.style.opacity = '1';
+                setTimeout(() => {
+                    elements.btnParar.style.transform = 'scale(1)';
+                }, 150);
             });
-        }, 200);
+        }, 250);
     } else {
-        elements.btnParar.style.transform = 'scale(0.8)';
-        elements.btnParar.style.opacity = '0';
+        // Antecipação
+        elements.btnParar.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+            elements.btnParar.style.transform = 'scale(0.8)';
+            elements.btnParar.style.opacity = '0';
+        }, 100);
         
         setTimeout(() => {
             elements.btnParar.classList.add('hidden');
@@ -885,48 +1635,81 @@ function trocarBotoes(girando) {
             elements.btnGirar.style.transform = 'scale(0.8)';
             elements.btnGirar.style.opacity = '0';
             
+            // Follow-through
             requestAnimationFrame(() => {
-                elements.btnGirar.style.transform = 'scale(1)';
+                elements.btnGirar.style.transform = 'scale(1.1)';
                 elements.btnGirar.style.opacity = '1';
+                setTimeout(() => {
+                    elements.btnGirar.style.transform = 'scale(1)';
+                }, 150);
             });
-        }, 200);
+        }, 250);
     }
 }
 
-// Adicionar classes de giro
+// Adicionar classes de giro com micro-animações
 function adicionarClassesGiro() {
-    if (elements.roletaContainer) elements.roletaContainer.classList.add('girando');
-    if (elements.roletaWrapper) elements.roletaWrapper.classList.add('girando');
-    if (elements.girosPremiosInfo) elements.girosPremiosInfo.classList.add('hidden');
-    if (elements.roleta) elements.roleta.classList.add('girando');
+    if (elements.roletaContainer) {
+        elements.roletaContainer.classList.add('girando');
+        elements.roletaContainer.style.transform = 'scale(1.02)';
+    }
+    if (elements.roletaWrapper) {
+        elements.roletaWrapper.classList.add('girando');
+    }
+    if (elements.girosPremiosInfo) {
+        elements.girosPremiosInfo.classList.add('hidden');
+    }
+    if (elements.roleta) {
+        elements.roleta.classList.add('girando');
+    }
 }
 
-// Remover classes de giro
+// Remover classes de giro com transições suaves
 function removerClassesGiro() {
-    if (elements.roletaContainer) elements.roletaContainer.classList.remove('girando');
-    if (elements.roletaWrapper) elements.roletaWrapper.classList.remove('girando');
-    if (elements.girosPremiosInfo) elements.girosPremiosInfo.classList.remove('hidden');
+    if (elements.roletaContainer) {
+        elements.roletaContainer.classList.remove('girando');
+        elements.roletaContainer.style.transform = 'scale(1)';
+    }
+    if (elements.roletaWrapper) {
+        elements.roletaWrapper.classList.remove('girando');
+    }
+    if (elements.girosPremiosInfo) {
+        elements.girosPremiosInfo.classList.remove('hidden');
+    }
     if (elements.roleta) {
         elements.roleta.classList.remove('girando');
         elements.roleta.classList.add('parando');
         
         setTimeout(() => {
             elements.roleta.classList.remove('parando');
-        }, 1000);
+        }, 1500);
     }
 }
 
-// Atualizar indicador de velocidade
+// Atualizar indicador de velocidade com efeitos
 function atualizarIndicadorVelocidade() {
     if (elements.velocidadeIndicator) {
         const porcentagem = (gameState.velocidadeAtual / roletaConfig.fisica.velocidadeConstante) * 100;
-        elements.velocidadeIndicator.style.width = `${Math.min(100, porcentagem)}%`;
+        const largura = Math.min(100, porcentagem);
+        
+        elements.velocidadeIndicator.style.width = `${largura}%`;
+        
+        // Cor baseada na velocidade
+        const hue = Math.min(120, largura * 1.2); // Verde para vermelho
+        elements.velocidadeIndicator.style.background = `hsl(${hue}, 70%, 50%)`;
+        
+        // Efeito de pulsação em alta velocidade
+        if (largura > 80) {
+            elements.velocidadeIndicator.style.boxShadow = `0 0 ${largura/10}px hsl(${hue}, 70%, 50%)`;
+        } else {
+            elements.velocidadeIndicator.style.boxShadow = 'none';
+        }
     }
 }
 
-// ===== FUNÇÕES AUXILIARES =====
+// ===== FUNÇÕES AUXILIARES ULTRA-APRIMORADAS =====
 
-// Criar efeito ripple
+// Criar efeito ripple ultra-avançado
 function criarEfeitoRipple(event, button) {
     const ripple = document.createElement('span');
     const rect = button.getBoundingClientRect();
@@ -941,55 +1724,123 @@ function criarEfeitoRipple(event, button) {
         top: ${y}px;
         position: absolute;
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.3);
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 70%);
         transform: scale(0);
-        animation: ripple 0.6s ease-out;
+        animation: rippleUltra 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         pointer-events: none;
+        z-index: 1000;
     `;
     
     ripple.classList.add('btn-ripple');
     button.appendChild(ripple);
     
-    setTimeout(() => ripple.remove(), 600);
+    setTimeout(() => ripple.remove(), 800);
 }
 
-// Adicionar animações CSS necessárias
+// Adicionar animações CSS ultra-avançadas
 function adicionarAnimacoesCSS() {
-    if (document.querySelector('#animacoes-profissionais')) return;
+    if (document.querySelector('#animacoes-ultra-realistas')) return;
     
     const style = document.createElement('style');
-    style.id = 'animacoes-profissionais';
+    style.id = 'animacoes-ultra-realistas';
     style.textContent = `
-        @keyframes ripple {
-            to { transform: scale(4); opacity: 0; }
+        @keyframes rippleUltra {
+            0% { transform: scale(0); opacity: 1; }
+            50% { transform: scale(2); opacity: 0.5; }
+            100% { transform: scale(4); opacity: 0; }
         }
         
-        @keyframes particleGiro {
-            0% { transform: translateY(0) scale(0); opacity: 1; }
-            50% { transform: translateY(-50px) scale(1); opacity: 0.8; }
-            100% { transform: translateY(-100px) scale(0); opacity: 0; }
+        @keyframes particulaGlow {
+            0% { filter: brightness(1) blur(0px); }
+            100% { filter: brightness(1.5) blur(1px); }
         }
         
-        @keyframes confeteFall {
-            0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        @keyframes confeteFallAvancado {
+            0% { 
+                transform: translateY(-20px) rotate(0deg) scale(0); 
+                opacity: 1; 
+            }
+            10% { 
+                transform: translateY(0px) rotate(36deg) scale(1); 
+                opacity: 1; 
+            }
+            100% { 
+                transform: translateY(100vh) rotate(720deg) scale(0.5); 
+                opacity: 0; 
+            }
         }
         
-        @keyframes setorVencedor {
-            0%, 100% { transform: scale(1) rotate(var(--rotation)); }
+        @keyframes setorVencedorUltra {
+            0%, 100% { 
+                transform: scale(1) rotate(var(--rotation)); 
+                filter: brightness(1) saturate(1);
+            }
+            25% { 
+                transform: scale(1.15) rotate(var(--rotation)); 
+                filter: brightness(1.4) saturate(1.3);
+                box-shadow: 0 0 40px rgba(255, 215, 0, 0.9);
+            }
             50% { 
                 transform: scale(1.1) rotate(var(--rotation)); 
-                box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
-                filter: brightness(1.3);
+                filter: brightness(1.6) saturate(1.5);
+                box-shadow: 0 0 60px rgba(255, 215, 0, 1);
+            }
+            75% { 
+                transform: scale(1.15) rotate(var(--rotation)); 
+                filter: brightness(1.4) saturate(1.3);
+                box-shadow: 0 0 40px rgba(255, 215, 0, 0.9);
+            }
+        }
+        
+        @keyframes auraVencedora {
+            0% { 
+                opacity: 0.6; 
+                transform: scale(1); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: scale(1.05); 
             }
         }
         
         .roleta.girando {
             transition: none !important;
+            will-change: transform;
         }
         
         .roleta.parando {
-            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: transform 1s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        .roletaContainer.girando {
+            transition: transform 0.3s ease-out;
+        }
+        
+        /* Otimizações de performance */
+        .roleta, .setor, .btn-girar, .btn-parar {
+            will-change: transform;
+            backface-visibility: hidden;
+            transform-style: preserve-3d;
+        }
+        
+        /* Suporte a motion reduzido */
+        @media (prefers-reduced-motion: reduce) {
+            .roleta, .particula, .confete, .btn-ripple {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* Melhorias para dispositivos móveis */
+        @media (max-width: 768px) {
+            .roleta {
+                transform-origin: center center;
+            }
+            
+            .btn-ripple {
+                animation-duration: 0.4s;
+            }
         }
     `;
     
@@ -1019,6 +1870,7 @@ function handleCadastro(e) {
     fecharModalCadastro();
     atualizarInterface();
     
+    vibrar([50, 50, 100]); // Vibração de boas-vindas
     mostrarToast(`Bem-vindo, ${nome}! Você recebeu 3 giros grátis!`, 'success');
 }
 
@@ -1127,14 +1979,17 @@ function mostrarToast(mensagem, tipo = 'info') {
 function criarParticulas() {
     if (!elements.particlesBg) return;
     
-    for (let i = 0; i < 30; i++) {
+    const quantidade = performance.getQualidade() === 'alta' ? 40 : 20;
+    
+    for (let i = 0; i < quantidade; i++) {
         const particula = document.createElement('div');
-        const tamanho = Math.random() * 6 + 2;
+        const tamanho = Math.random() * 8 + 2;
         const cores = [
-            'rgba(255, 215, 0, 0.3)',
-            'rgba(138, 43, 226, 0.2)',
-            'rgba(255, 105, 180, 0.2)',
-            'rgba(76, 205, 196, 0.2)'
+            'rgba(255, 215, 0, 0.4)',
+            'rgba(138, 43, 226, 0.3)',
+            'rgba(255, 105, 180, 0.3)',
+            'rgba(76, 205, 196, 0.3)',
+            'rgba(255, 255, 255, 0.2)'
         ];
         
         particula.style.cssText = `
@@ -1147,23 +2002,38 @@ function criarParticulas() {
             top: ${Math.random() * 100}%;
             pointer-events: none;
             filter: blur(1px);
-            animation: particleFloat ${20 + Math.random() * 30}s linear infinite;
-            animation-delay: ${Math.random() * 15}s;
+            animation: particleFloat ${25 + Math.random() * 35}s linear infinite;
+            animation-delay: ${Math.random() * 20}s;
+            box-shadow: 0 0 ${tamanho * 2}px ${cores[Math.floor(Math.random() * cores.length)]};
         `;
         
         elements.particlesBg.appendChild(particula);
     }
     
     // Adicionar animação de partículas se não existir
-    if (!document.querySelector('#particle-animation')) {
+    if (!document.querySelector('#particle-animation-ultra')) {
         const style = document.createElement('style');
-        style.id = 'particle-animation';
+        style.id = 'particle-animation-ultra';
         style.textContent = `
             @keyframes particleFloat {
-                0% { transform: translateY(0px) translateX(0px) rotate(0deg) scale(0); opacity: 0; }
-                5% { opacity: 1; transform: translateY(-20px) translateX(10px) rotate(45deg) scale(1); }
-                95% { opacity: 0.8; }
-                100% { transform: translateY(-100vh) translateX(150px) rotate(360deg) scale(0); opacity: 0; }
+                0% { 
+                    transform: translateY(0px) translateX(0px) rotate(0deg) scale(0); 
+                    opacity: 0; 
+                }
+                5% { 
+                    opacity: 1; 
+                    transform: translateY(-30px) translateX(15px) rotate(45deg) scale(1); 
+                }
+                50% {
+                    transform: translateY(-50vh) translateX(75px) rotate(180deg) scale(1.2);
+                }
+                95% { 
+                    opacity: 0.8; 
+                }
+                100% { 
+                    transform: translateY(-100vh) translateX(200px) rotate(360deg) scale(0); 
+                    opacity: 0; 
+                }
             }
         `;
         document.head.appendChild(style);
@@ -1176,17 +2046,24 @@ function inicializarEfeitosVisuais() {
     setores.forEach((setor) => {
         setor.addEventListener('mouseenter', () => {
             if (gameState.estadoRoleta === ESTADOS_ROLETA.IDLE) {
-                setor.style.transform += ' scale(1.05)';
+                setor.style.transform += ' scale(1.08)';
                 setor.style.zIndex = '10';
-                setor.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.5)';
+                setor.style.boxShadow = '0 0 25px rgba(255, 215, 0, 0.6)';
+                setor.style.filter = 'brightness(1.2) saturate(1.1)';
+                
+                // Vibração sutil no hover (apenas mobile)
+                if ('vibrate' in navigator) {
+                    vibrar([1]);
+                }
             }
         });
         
         setor.addEventListener('mouseleave', () => {
             if (gameState.estadoRoleta === ESTADOS_ROLETA.IDLE) {
-                setor.style.transform = setor.style.transform.replace(' scale(1.05)', '');
+                setor.style.transform = setor.style.transform.replace(' scale(1.08)', '');
                 setor.style.zIndex = 'auto';
                 setor.style.boxShadow = 'none';
+                setor.style.filter = 'none';
             }
         });
     });
@@ -1209,27 +2086,43 @@ function resetarJogo() {
         duracaoGiroTotal: 0,
         bloqueado: false,
         fisica: {
-            velocidadeMaxima: 20,
-            aceleracaoInicial: 0.8,
-            desaceleracaoFinal: 0.92,
-            inercia: 0.98,
-            atrito: 0.995
+            momentum: 0,
+            inercia: 0.995,
+            atritoRolamento: 0.998,
+            atritoAr: 0.9995,
+            atritoMagnetico: 0.997,
+            variacao: 0.0001,
+            oscilacaoAmplitude: 0,
+            oscilacaoFrequencia: 0,
+            oscilacaoTempo: 0
+        },
+        performance: {
+            fps: 60,
+            qualidade: 'alta',
+            adaptativo: true,
+            ultimoFrame: 0,
+            contadorFrames: 0
         }
     };
     
     fisica.reset();
+    efeitos.limparEfeitos();
     localStorage.removeItem('roletaUser');
     atualizarInterface();
     location.reload();
 }
 
-// Expor para console
+// Expor para console (debugging)
 window.resetarJogo = resetarJogo;
 window.gameState = gameState;
 window.roletaConfig = roletaConfig;
 window.fisica = fisica;
 window.audioSystem = audioSystem;
 window.efeitos = efeitos;
+window.performance = performance;
 
-console.log('🎰 RoletaWin Profissional carregada com sucesso!');
+console.log('🎰 RoletaWin Ultra-Realista carregada com sucesso!');
+console.log('📊 Performance:', performance.getQualidade());
+console.log('🔊 Áudio espacial:', audioSystem.context ? 'Ativo' : 'Inativo');
+console.log('📱 Sistema háptico:', gameState.haptico ? 'Disponível' : 'Indisponível');
 
